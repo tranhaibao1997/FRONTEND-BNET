@@ -162,7 +162,7 @@ function ProfileCard({
                       (friendId) => friendId._id == user._id
                     ).length > 0 ? (
                     <button
-                      onClick={() => deleteFriendRequest(profile.userId._id)}
+                      onClick={() => deleteFriendRequest(profile.userId._id,"client")}
                       className="btn btn-danger "
                     >
                       Cancle Friend Request
@@ -171,7 +171,7 @@ function ProfileCard({
                       (friendId) => friendId._id == user._id
                     ).length > 0 ? (
                     <button
-                      onClick={() => acceptFriendRequest(profile.userId._id)}
+                      onClick={() => acceptFriendRequest(profile.userId._id,"client")}
                       className="btn btn-primary"
                     >
                       Accept Friend Request{" "}

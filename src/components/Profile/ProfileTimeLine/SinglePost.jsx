@@ -52,12 +52,13 @@ function SinglePost({ post, user, likePost, deletePost }) {
 
   return (
     <>
-      {/* THIS IS DETAIL POST MODAL */}
       <EditPost
         editModalIsOpen={editModalIsOpen}
         setEditIsOpen={setEditIsOpen}
         post={post}
       ></EditPost>
+      {/* THIS IS DETAIL POST MODAL */}
+
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -105,46 +106,154 @@ function SinglePost({ post, user, likePost, deletePost }) {
               <article className="hentry post">
                 <div className="post__author author vcard inline-items">
                   <img
-                    src={post.author ? post.author.avatar : post.avatar}
-                    alt="author"
+                    src={
+                      post.author
+                        ? post.author.avatar
+                          ? post.author.avatar
+                          : user.avatar
+                        : post.avatar
+                    }
+                    alt="author123"
                   />
-                  <div className="author-date">
-                    <a
-                      className="h6 post__author-name fn"
-                      href="02-ProfilePage.html"
+                  <div>
+                    <div
+                      style={{ display: "inline-flex" }}
+                      className="author-date"
                     >
-                      {post.author
-                        ? post.author.firstName + " " + post.author.lastName
-                        : ""}
-                    </a>
+                      <Link
+                        className="h6 post__author-name fn"
+                        to={`/profile/${
+                          post.author._id ? post.author._id : post.author
+                        }/timeline`}
+                      >
+                        {post.author && post.author.lastName
+                          ? post.author.firstName + " " + post.author.lastName
+                          : post.name}
+                      </Link>
+                      {post.peopleTag.length > 0 ? (
+                        <div className="friend-tags">
+                          - With
+                          {post.peopleTag.map((tag, index) => (
+                            <>
+                              {index == 0 ? (
+                                <Link
+                                  target="_blank"
+                                  to={`/profile/${tag._id}/timeline`}
+                                >
+                                  {" "}
+                                  {tag.firstName}
+                                </Link>
+                              ) : (
+                                <Link
+                                  target="_blank"
+                                  to={`/profile/${tag._id}/timeline`}
+                                >
+                                  {" "}
+                                  , {tag.firstName}
+                                </Link>
+                              )}
+                            </>
+                          ))}
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      {post.checkIn && (
+                        <span>
+                          - At <Link>{post.checkIn}</Link>
+                        </span>
+                      )}
+
+                      {post.author._id && post.onWall._id ? (
+                        <>
+                          {post.author._id.toString() !==
+                          post.onWall._id.toString() ? (
+                            <div style={{ display: "contents" }}>
+                              <span>{""}</span>
+                              <i
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                                className="fas fa-long-arrow-alt-right"
+                              ></i>
+                              <Link
+                                className="h6 post__author-name fn"
+                                to={`/profile/${post.onWall._id}/timeline`}
+                              >
+                                <span>{""}</span>
+                                {post.wallOwner}
+                              </Link>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {post.author !== post.onWall ? (
+                            <div style={{ display: "contents" }}>
+                              <span>{""}</span>
+                              <i class="fas fa-long-arrow-alt-right"></i>
+                              <a
+                                className="h6 post__author-name fn"
+                                href="02-ProfilePage.html"
+                              >
+                                <span>{""}</span>
+                                {post.wallOwner}
+                              </a>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </>
+                      )}
+                    </div>
                     <div className="post__date">
-                      <Moment date={post.date} fromNow></Moment>
+                      <time className="published" dateTime="2017-03-24T18:18">
+                        <Moment date={post.date} fromNow></Moment>
+                      </time>
                     </div>
                   </div>
-                  <div className="more">
-                    <svg className="olymp-three-dots-icon">
-                      <use xlinkHref="#olymp-three-dots-icon" />
-                    </svg>
-                    <ul className="more-dropdown">
-                      <li>
-                        <a onClick={() => setEditIsOpen(true)} href="#">
-                          Edit Post
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">Delete Post</a>
-                      </li>
-                      <li>
-                        <a href="#">Turn Off Notifications</a>
-                      </li>
-                      <li>
-                        <a href="#">Select as Featured</a>
-                      </li>
-                    </ul>
-                  </div>
+                  {post.author ? (
+                    post.author._id == user._id || post.author == user._id ? (
+                      <div className="more">
+                        <svg className="olymp-three-dots-icon">
+                          <use xlinkHref="#olymp-three-dots-icon" />
+                        </svg>
+                        <ul className="more-dropdown">
+                          <li>
+                            <a
+                              className="edit-delete-post-btn"
+                              onClick={() => setEditIsOpen(true)}
+                            >
+                              Edit Post
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              className="edit-delete-post-btn"
+                              onClick={() => deletePost(post._id)}
+                            >
+                              Delete Post
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    ) : (
+                      ""
+                    )
+                  ) : (
+                    ""
+                  )}
                 </div>
                 <p>{<Emoji text={post.text} />}</p>
-                {/* <p>With: <a href="#">Jessy Owen</a>, <a href="#">Marina Valentine</a></p> */}
+                <div
+                  style={{ maxHeight: "400px", overflow: "auto" }}
+                  className="post-content"
+                >
+                  
+                </div>
                 <div
                   style={{ marginBottom: "8px" }}
                   className="post-additional-info inline-items"
@@ -162,12 +271,14 @@ function SinglePost({ post, user, likePost, deletePost }) {
                     >
                       <use xlinkHref="#olymp-heart-icon" />
                     </svg>
-                    <span>{post.likes.length}</span>
+                    <span>{post.likes.length || 0} people liked this post</span>
                   </div>
 
                   <div>
-                    <span style={{ marginRight: "14px" }}>1 comment</span>
-                    <span>{post.comments.length} share</span>
+                    <span style={{ marginRight: "14px" }}>
+                      {post.comments.length} comment
+                    </span>
+                    <span>1 share</span>
                   </div>
                 </div>
 
@@ -196,8 +307,8 @@ function SinglePost({ post, user, likePost, deletePost }) {
                     <span>Like</span>
                   </a>
                   <a
+                    style={{ cursor: "pointer" }}
                     onClick={() => setAppear(true)}
-                    href="#"
                     className="post-add-icon inline-items"
                   >
                     <svg className="olymp-speech-balloon-icon">
@@ -212,105 +323,44 @@ function SinglePost({ post, user, likePost, deletePost }) {
                     <span style={{ color: "#888da8" }}>Share</span>
                   </a>
                 </div>
+                {/* <div className="control-block-button post-control-button">
+                      <a href="#" className="btn btn-control">
+                        <svg className="olymp-like-post-icon">
+                          <use xlinkHref="#olymp-like-post-icon" />
+                        </svg>
+                      </a>
+                      <a href="#" className="btn btn-control">
+                        <svg className="olymp-comments-post-icon">
+                          <use xlinkHref="#olymp-comments-post-icon" />
+                        </svg>
+                      </a>
+                      <a href="#" className="btn btn-control">
+                        <svg className="olymp-share-icon">
+                          <use xlinkHref="#olymp-share-icon" />
+                        </svg>
+                      </a>
+                    </div> */}
               </article>
-              <div
-                className="mCustomScrollbar ps ps--theme_default ps--active-y"
-                data-mcs-theme="dark"
-                data-ps-id="9efad961-4b73-e4d9-711f-444234b9cdcc"
+              {/* .. end Post */}
+              {/* Comments */}
+              <ul
+                className={appear ? "comments-list" : "comments-list disappear"}
               >
-                <ul className="comments-list">
-                  <li className="comment-item">
-                    <div className="post__author author vcard inline-items">
-                      <img src="img/avatar48-sm.jpg" alt="author" />
-                      <div className="author-date">
-                        <a className="h6 post__author-name fn" href="#">
-                          Marina Valentine
-                        </a>
-                        <div className="post__date">
-                          <time
-                            className="published"
-                            dateTime="2017-03-24T18:18"
-                          >
-                            46 mins ago
-                          </time>
-                        </div>
-                      </div>
-                      <a href="#" className="more">
-                        <svg className="olymp-three-dots-icon">
-                          <use xlinkHref="#olymp-three-dots-icon" />
-                        </svg>
-                      </a>
-                    </div>
-                    <p>I had a great time too!! We should do it again!</p>
-                    <a href="#" className="post-add-icon inline-items">
-                      <svg className="olymp-heart-icon">
-                        <use xlinkHref="#olymp-heart-icon" />
-                      </svg>
-                      <span>8</span>
-                    </a>
-                    <a href="#" className="reply">
-                      Reply
-                    </a>
-                  </li>
-                  <li className="comment-item">
-                    <div className="post__author author vcard inline-items">
-                      <img src="img/avatar4-sm.jpg" alt="author" />
-                      <div className="author-date">
-                        <a className="h6 post__author-name fn" href="#">
-                          Chris Greyson
-                        </a>
-                        <div className="post__date">
-                          <time
-                            className="published"
-                            dateTime="2017-03-24T18:18"
-                          >
-                            1 hour ago
-                          </time>
-                        </div>
-                      </div>
-                      <a href="#" className="more">
-                        <svg className="olymp-three-dots-icon">
-                          <use xlinkHref="#olymp-three-dots-icon" />
-                        </svg>
-                      </a>
-                    </div>
-                    <p>
-                      Dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                      cupidatat non proident, sunt in culpa qui officia deserunt
-                      mollit.
-                    </p>
-                    <a href="#" className="post-add-icon inline-items">
-                      <svg className="olymp-heart-icon">
-                        <use xlinkHref="#olymp-heart-icon" />
-                      </svg>
-                      <span>7</span>
-                    </a>
-                    <a href="#" className="reply">
-                      Reply
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <form className="comment-form inline-items">
-                <div className="post__author author vcard inline-items">
-                  <img src="img/author-page.jpg" alt="author" />
-                  <div className="form-group with-icon-right is-empty">
-                    <textarea
-                      className="form-control"
-                      placeholder="Press Enter to post..."
-                      defaultValue={""}
-                    />
-                    <div className="add-options-message">
-                      <a href="#" className="options-message">
-                        <svg className="olymp-camera-icon">
-                          <use xlinkHref="#olymp-camera-icon" />
-                        </svg>
-                      </a>
-                    </div>
-                    <span className="material-input" />
-                  </div>
-                </div>
-              </form>
+                {post.comments.map((cmt) => (
+                  <SingleComment
+                    cmt={cmt}
+                    user={user}
+                    post={post}
+                  ></SingleComment>
+                ))}
+              </ul>
+              {/* ... end Comments
+        <a href="#" className="more-comments">
+          View more comments <span>+</span>
+        </a>
+        {/* Comment Form  */}
+              <CommentBox postId={post._id} setAppear={setAppear}></CommentBox>
+              {/* ... end Comment Form  */}{" "}
             </div>
           </div>
         </div>
@@ -332,94 +382,98 @@ function SinglePost({ post, user, likePost, deletePost }) {
               alt="author123"
             />
             <div>
-            <div style={{display:"inline-flex"}} className="author-date">
-              <Link
-                className="h6 post__author-name fn"
-                to={`/profile/${
-                  post.author._id ? post.author._id : post.author
-                }/timeline`}
-              >
-                {post.author && post.author.lastName
-                  ? post.author.firstName + " " + post.author.lastName
-                  : post.name}
-              </Link>
-              {post.peopleTag.length > 0 ? (
-                <div className="friend-tags">
-                  - With
-                  {post.peopleTag.map((tag, index) => (
-                    <>
-                      {index == 0 ? (
-                        <Link
-                          target="_blank"
-                          to={`/profile/${tag._id}/timeline`}
-                        >
-                          {" "}
-                          {tag.firstName}
-                        </Link>
-                      ) : (
-                        <Link
-                          target="_blank"
-                          to={`/profile/${tag._id}/timeline`}
-                        >
-                          {" "}
-                          , {tag.firstName}
-                        </Link>
-                      )}
-                    </>
-                  ))}
-                </div>
-              ) : (
-                ""
-              )}
-              {post.checkIn && (
-                <span>
-                  - At <Link>{post.checkIn}</Link>
-                </span>
-              )}
+              <div style={{ display: "inline-flex" }} className="author-date">
+                <Link
+                  className="h6 post__author-name fn"
+                  to={`/profile/${
+                    post.author._id ? post.author._id : post.author
+                  }/timeline`}
+                >
+                  {post.author && post.author.lastName
+                    ? post.author.firstName + " " + post.author.lastName
+                    : post.name}
+                </Link>
+                {post.peopleTag.length > 0 ? (
+                  <div className="friend-tags">
+                    - With
+                    {post.peopleTag.map((tag, index) => (
+                      <>
+                        {index == 0 ? (
+                          <Link
+                            target="_blank"
+                            to={`/profile/${tag._id}/timeline`}
+                          >
+                            {" "}
+                            {tag.firstName}
+                          </Link>
+                        ) : (
+                          <Link
+                            target="_blank"
+                            to={`/profile/${tag._id}/timeline`}
+                          >
+                            {" "}
+                            , {tag.firstName}
+                          </Link>
+                        )}
+                      </>
+                    ))}
+                  </div>
+                ) : (
+                  ""
+                )}
+                {post.checkIn && (
+                  <span>
+                    - At <Link>{post.checkIn}</Link>
+                  </span>
+                )}
 
-              {post.author._id && post.onWall._id ? (
-                <>
-                  {post.author._id.toString() !== post.onWall._id.toString() ? (
-                    <div style={{ display: "contents" }}>
-                      <span>{""}</span>
-                      <i style={{display:"flex",alignItems:"center"}} className="fas fa-long-arrow-alt-right"></i>
-                      <Link
-                        className="h6 post__author-name fn"
-                        to={`/profile/${post.onWall._id}/timeline`}
-                      >
+                {post.author._id && post.onWall._id ? (
+                  <>
+                    {post.author._id.toString() !==
+                    post.onWall._id.toString() ? (
+                      <div style={{ display: "contents" }}>
                         <span>{""}</span>
-                        {post.wallOwner}
-                      </Link>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </>
-              ) : (
-                <>
-                  {post.author !== post.onWall ? (
-                    <div style={{ display: "contents" }}>
-                      <span>{""}</span>
-                      <i class="fas fa-long-arrow-alt-right"></i>
-                      <a
-                        className="h6 post__author-name fn"
-                        href="02-ProfilePage.html"
-                      >
+                        <i
+                          style={{ display: "flex", alignItems: "center" }}
+                          className="fas fa-long-arrow-alt-right"
+                        ></i>
+                        <Link
+                          className="h6 post__author-name fn"
+                          to={`/profile/${post.onWall._id}/timeline`}
+                        >
+                          <span>{""}</span>
+                          {post.wallOwner}
+                        </Link>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {post.author !== post.onWall ? (
+                      <div style={{ display: "contents" }}>
                         <span>{""}</span>
-                        {post.wallOwner}
-                      </a>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </>
-              )}
-            </div>
-            <div className="post__date">
-              <time className="published" dateTime="2017-03-24T18:18">
-                <Moment date={post.date} fromNow></Moment>
-              </time>
-            </div>
+                        <i class="fas fa-long-arrow-alt-right"></i>
+                        <a
+                          className="h6 post__author-name fn"
+                          href="02-ProfilePage.html"
+                        >
+                          <span>{""}</span>
+                          {post.wallOwner}
+                        </a>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </>
+                )}
+              </div>
+              <div className="post__date">
+                <time className="published" dateTime="2017-03-24T18:18">
+                  <Moment date={post.date} fromNow></Moment>
+                </time>
+              </div>
             </div>
             {post.author ? (
               post.author._id == user._id || post.author == user._id ? (
@@ -479,7 +533,7 @@ function SinglePost({ post, user, likePost, deletePost }) {
                 ))}
           </div>
           <div
-            style={{ marginBottom: "8px" }}
+            style={{ marginBottom: "8px",position:"relative" }}
             className="post-additional-info inline-items"
           >
             <div
@@ -497,6 +551,12 @@ function SinglePost({ post, user, likePost, deletePost }) {
               </svg>
               <span>{post.likes.length || 0} people liked this post</span>
             </div>
+            <ul className="like-people-list">
+              <li>Bao,</li>
+              <li>Bao,</li>
+              <li>Bao,</li>
+              <li>Bao,</li>
+            </ul>
 
             <div>
               <span style={{ marginRight: "14px" }}>

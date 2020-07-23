@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import SinglePost from './SinglePost';
+import Loading from '../../Loading'
 
 
 function AllPost({ getPostsById, match, posts,user }) {
@@ -22,7 +23,7 @@ function AllPost({ getPostsById, match, posts,user }) {
                 posts ? posts.map(post => (
                     <SinglePost post={post} user={user}></SinglePost>
                 ))
-                    : ""
+                    : <Loading></Loading>
             }
         </>
     );

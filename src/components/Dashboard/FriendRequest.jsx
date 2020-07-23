@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { deleteFriendRequest } from '../../actions/profile'
+import {Link} from 'react-router-dom'
 
 function FriendRequest({ profile, deleteFriendRequest }) {
     return (
@@ -16,11 +17,14 @@ function FriendRequest({ profile, deleteFriendRequest }) {
                         profile ? profile.friendRequestSent.map(friendRQ => {
                             return (
                                 <li>
+                                    <Link to={`/profile/${friendRQ._id}/timeline`}>
                                     <div className="author-thumb">
                                         <img style={{ maxWidth: "100%" }} src={friendRQ.avatar} alt="author" />
                                     </div>
+                                    </Link>
+                                   
                                     <div className="notification-event">
-                                        <a href="#" className="h6 notification-friend">{friendRQ.firstName} {friendRQ.lastName}</a>
+                                        <Link to={`/profile/${friendRQ._id}/timeline`} className="h6 notification-friend">{friendRQ.firstName} {friendRQ.lastName}</Link>
 
                                     </div>
                                     <span className="notification-icon">
@@ -31,7 +35,7 @@ function FriendRequest({ profile, deleteFriendRequest }) {
                         Accept Friend Request
                       </a> */}
                                        
-                                        <button onClick={() => deleteFriendRequest(friendRQ._id)} className="btn btn-danger">Cancle Friend Request</button>
+                                        <button onClick={() => deleteFriendRequest(friendRQ._id,"owner")} className="btn btn-danger">Cancle Friend Request</button>
                                     </span>
 
                                 </li>

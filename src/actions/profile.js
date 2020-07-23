@@ -268,9 +268,9 @@ export const addToFriendRequest = id => async dispatch => {
         }
     }
     //delete From Request List
-export const deleteFriendRequest = id => async dispatch => {
+export const deleteFriendRequest = (id,target) => async dispatch => {
     try {
-        let res = await axios.delete(`https://bnet-backend.herokuapp.com/api/profile/friendRequest/${id}`)
+        let res = await axios.delete(`https://bnet-backend.herokuapp.com/api/profile/friendRequest/${id}?target=${target}`)
         console.log(res)
         dispatch({
             type: PROFILE_UPDATE,
@@ -286,10 +286,10 @@ export const deleteFriendRequest = id => async dispatch => {
 
 //add to FriendList
 
-export const acceptFriendRequest = id => async dispatch => {
+export const acceptFriendRequest = (id,target) => async dispatch => {
 
     try {
-        let res = await axios.post(`https://bnet-backend.herokuapp.com/api/profile/acceptFriendRequest/${id}`)
+        let res = await axios.post(`https://bnet-backend.herokuapp.com/api/profile/acceptFriendRequest/${id}?target=${target}`)
         console.log(res)
         dispatch({
             type: PROFILE_UPDATE,

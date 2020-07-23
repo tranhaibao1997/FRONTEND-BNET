@@ -1,13 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
-import { deleteFriendRequest } from "../../actions/profile";
+import {
+  deleteFriendRequest,
+  acceptFriendRequest,
+} from "../../actions/profile";
+import {Link} from 'react-router-dom'
 
-function FriendRecieved({ profile, deleteFriendRequest }) {
+function FriendRecieved({ profile, deleteFriendRequest,acceptFriendRequest }) {
   return (
     <div>
       <div className="ui-block">
         <div className="ui-block-title">
-          <h6 className="title">Friend Requests Recieved ({profile.friendRequestPending.length})</h6>
+          <h6 className="title">
+            Friend Requests Recieved ({profile.friendRequestPending.length})
+          </h6>
         </div>
         {/* Notification List Frien Requests */}
         <ul className="notification-list friend-requests">
@@ -15,6 +21,7 @@ function FriendRecieved({ profile, deleteFriendRequest }) {
             ? profile.friendRequestPending.map((friendRQ) => {
                 return (
                   <li>
+                    <Link to={`/profile/${friendRQ._id}/timeline`}>
                     <div className="author-thumb">
                       <img
                         style={{ maxWidth: "100%" }}
@@ -22,16 +29,25 @@ function FriendRecieved({ profile, deleteFriendRequest }) {
                         alt="author"
                       />
                     </div>
+                    </Link>
+                  
                     <div className="notification-event">
-                      <a href="#" className="h6 notification-friend">
+                      <Link to={`/profile/${friendRQ._id}/timeline`} className="h6 notification-friend">
                         {friendRQ.firstName} {friendRQ.lastName}
-                      </a>
+                      </Link>
                     </div>
                     <span className="notification-icon">
-                      <a href="#" className="accept-request">
-                                            <span className="icon-add">
-                                            <i style={{fontSize:"22px"}} className="fas fa-user"></i>
-                                            </span>
+                      <a
+                        onClick={() => acceptFriendRequest(friendRQ._id,"owner")}
+                        href="#"
+                        className="accept-request"
+                      >
+                        <span className="icon-add">
+                          <i
+                            style={{ fontSize: "22px" }}
+                            className="fas fa-user"
+                          ></i>
+                        </span>
                         Accept Friend Request
                       </a>
                       <a
@@ -40,7 +56,7 @@ function FriendRecieved({ profile, deleteFriendRequest }) {
                           color: "white",
                           cursor: "pointer",
                         }}
-                        onClick={() => deleteFriendRequest(friendRQ._id)}
+                        onClick={() => deleteFriendRequest(friendRQ._id,"owner")}
                         className="accept-request request-del"
                       >
                         <span
@@ -69,6 +85,6 @@ const mapStateToProps = (state) => ({
   profile: state.profile.profile,
 });
 
-export default connect(mapStateToProps, { deleteFriendRequest })(
+export default connect(mapStateToProps, { deleteFriendRequest,acceptFriendRequest})(
   FriendRecieved
 );

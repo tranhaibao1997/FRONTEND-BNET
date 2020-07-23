@@ -93,7 +93,12 @@ function Location(props) {
                   }}
                 >
                   <Marker
-                    title="My location"
+                    options={{
+                      icon: {
+                        url: user.avatar,
+                        scaledSize: new props.google.maps.Size(50, 50),
+                      },
+                    }}
                     position={{
                       lat: user.location.latitude,
                       lng: user.location.longtitude,
@@ -105,13 +110,21 @@ function Location(props) {
                       let lng = Number(friend.location.longtitude);
                       console.log(lat, lng);
                       return (
-                        lat!==0 && lng!==0 
-                        &&<Marker
-                          title={friend.firstName+" "+ friend.lastName}
-                          id={friend._id}
-                          key={friend._id}
-                          position={{ lat: lat, lng: lng }}
-                        ></Marker>
+                        lat !== 0 &&
+                        lng !== 0 && (
+                          <Marker
+                            options={{
+                              icon: {
+                                url: friend.avatar,
+                                scaledSize: new props.google.maps.Size(50, 50),
+                              },
+                            }}
+                            title={friend.firstName + " " + friend.lastName}
+                            id={friend._id}
+                            key={friend._id}
+                            position={{ lat: lat, lng: lng }}
+                          ></Marker>
+                        )
                       );
                     })}
                 </Map>

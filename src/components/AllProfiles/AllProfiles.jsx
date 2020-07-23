@@ -12,6 +12,7 @@ import { getAllProfiles, clearProfiles } from "../../actions/profile";
 import profile from "../../reducers/profile";
 import Pagination from "react-pagination-library";
 import "react-pagination-library/build/css/index.css";
+import Loading from "../Loading";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -139,7 +140,7 @@ function AllProfiles({
                     ></ProfileCard>
                   </div>
                 ))
-                : ""}
+                : <Loading></Loading>}
             </div>
           </div>
         </div>

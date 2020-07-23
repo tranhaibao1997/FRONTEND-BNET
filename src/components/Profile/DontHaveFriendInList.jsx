@@ -46,7 +46,7 @@ function DontHaveFriendInList({
                             (friendId) => friendId._id == user._id
                         ).length > 0
                             ? <Link
-                                onClick={() => deleteFriendRequest(profile.userId._id)}
+                                onClick={() => deleteFriendRequest(profile.userId._id,"client")}
                                 to={`/profile/${profile.userId._id}/timeline`}
                                 style={{ background: "crimson" }}
                                 className="btn btn-control my-friend-route-btn cancle-request "
@@ -58,7 +58,7 @@ function DontHaveFriendInList({
                                 (friendId) => friendId._id == user._id
                             ).length > 0
                                 ? <Link
-                                    onClick={() => acceptFriendRequest(profile.userId._id)}
+                                    onClick={() => acceptFriendRequest(profile.userId._id,"client")}
                                     to={`/profile/${profile.userId._id}/timeline`}
                                     style={{ background: "crimson" }}
                                     className="btn btn-control my-friend-route-btn accept-request "

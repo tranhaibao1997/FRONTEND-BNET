@@ -8,6 +8,7 @@ import { getNewsFeed } from "../../actions/post";
 import WeatherSection from './WeatherSection'
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import Loading from '../Loading'
 
 function Newfeed({ profile, user,getCurrentProfile,getNewsFeed }) {
   React.useEffect(() => {
@@ -297,7 +298,7 @@ function Newfeed({ profile, user,getCurrentProfile,getNewsFeed }) {
         </aside>
         {/* ... end Right Sidebar */}
       </div>
-    </div> :""
+    </div> :<Loading></Loading>
 
     }
       
