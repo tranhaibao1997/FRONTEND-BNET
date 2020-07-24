@@ -15,7 +15,7 @@ function Navbar({ isAuthenticated, user,logout }) {
           <h6>BNET</h6>
         </div>
         <div className="header-content-wrapper">
-          <Link to="/discoverFriends" className="link-find-friend">
+          <Link to="/" className="link-find-friend">
             Find Friends Around
           </Link>
           {isAuthenticated && user ? (
