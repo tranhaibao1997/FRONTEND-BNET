@@ -494,3 +494,12 @@
 .square-fill a:last-of-type {
     background-color: #ff5e3a !important;
 } */
+
+.square-fill .is-active,
+.square-fill a:first-of-type {
+    background-color: #ff5e3a !important;
+}
+
+.square-fill a:last-of-type {
+    background-color: #ff5e3a !important;
+}

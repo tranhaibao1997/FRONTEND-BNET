@@ -57,7 +57,7 @@ function FilterSection({ getAllProfiles }) {
         getAllProfiles(ageValue[0], ageValue[1], lookingFor)
         // minAge[1](0)
         // maxAge[1](100)
-        // currentPage[1](1)
+        currentPage[1](1)
         // gender[1](null)
     }
 
