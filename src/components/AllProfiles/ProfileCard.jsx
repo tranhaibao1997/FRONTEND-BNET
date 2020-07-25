@@ -31,24 +31,23 @@ function ProfileCard({
   function degreesToRadians(degrees) {
     return degrees * Math.PI / 180;
   }
-  
+
   function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
-    if(lat1==0 && lon1==0)
-    {
+    if (lat1 == 0 && lon1 == 0) {
       return "This user hadn't updated location"
     }
     var earthRadiusKm = 6371;
-  
-    var dLat = degreesToRadians(lat2-lat1);
-    var dLon = degreesToRadians(lon2-lon1);
-  
+
+    var dLat = degreesToRadians(lat2 - lat1);
+    var dLon = degreesToRadians(lon2 - lon1);
+
     lat1 = degreesToRadians(lat1);
     lat2 = degreesToRadians(lat2);
-  
-    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    return `${Math.floor(earthRadiusKm * c *1000)} m away`;
+
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return `${Math.floor(earthRadiusKm * c * 1000)} m away`;
   }
   return (
     <>
@@ -79,26 +78,27 @@ function ProfileCard({
             </ul>
           </div> */}
           <div className="friend-avatar">
-            <div className="author-thumb">
-              <Link to={`/profile/${profile.userId._id}/timeline`}>
-                <img
-                  style={{ maxWidth: "100%" }}
-                  src={profile.userId.avatar}
-                  alt="author"
-                />
-              </Link>
+          <Link to={`/profile/${profile.userId._id}/timeline`}>
+            <div style={{
+              backgroundImage:
+                "url(" +
+                `${profile.userId ? profile.userId.avatar : ""}` +
+                ")",
+            }} className="author-thumb">
+             
+         
             </div>
-           
+            </Link>
             <div className="author-content">
-              
+
               <a href="#" className="h5 author-name">
                 {profile.userId.firstName + " " + profile.userId.lastName}
               </a>
-              
+
               <div className="country">{profile.livesIn}</div>
             </div>
           </div>
-          
+
           <Slider {...settings}>
             <div>
               <div className="swiper-slide ">
@@ -124,65 +124,65 @@ function ProfileCard({
                   ) : user._id == profile.userId._id ? (
                     ""
                   ) : profile.friendList
-                      .map((friend) => friend._id)
-                      .includes(user._id) ? (
-                    <>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                        className="control-block-button"
-                      >
-                        <button
-                          onClick={() => unFriend(profile.userId._id)}
-                          style={{ marginRight: "10px" }}
-                          className="btn btn-danger"
-                        >
-                          Unfriend
+                    .map((friend) => friend._id)
+                    .includes(user._id) ? (
+                          <>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                              className="control-block-button"
+                            >
+                              <button
+                                onClick={() => unFriend(profile.userId._id)}
+                                style={{ marginRight: "10px" }}
+                                className="btn btn-danger"
+                              >
+                                Unfriend
                         </button>
-                        <button className="btn btn-success">Chat</button>
-                      </div>
-                    </>
-                  ) : //if chua ai dung gi nhau
-                  profile.friendRequestPending.filter(
-                      (friendId) => friendId._id == user._id
-                    ).length == 0 &&
-                    profile.friendRequestSent.filter(
-                      (friendId) => friendId._id == user._id
-                    ).length == 0 ? (
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => addToFriendRequest(profile.userId._id)}
-                    >
-                      Add Friend
-                    </button>
-                  ) : profile.friendRequestPending.filter(
-                      (friendId) => friendId._id == user._id
-                    ).length > 0 ? (
-                    <button
-                      onClick={() => deleteFriendRequest(profile.userId._id,"client")}
-                      className="btn btn-danger "
-                    >
-                      Cancle Friend Request
-                    </button>
-                  ) : profile.friendRequestSent.filter(
-                      (friendId) => friendId._id == user._id
-                    ).length > 0 ? (
-                    <button
-                      onClick={() => acceptFriendRequest(profile.userId._id,"client")}
-                      className="btn btn-primary"
-                    >
-                      Accept Friend Request{" "}
-                    </button>
-                  ) : (
-                    ""
-                  )}
-                  
+                              <button className="btn btn-success">Chat</button>
+                            </div>
+                          </>
+                        ) : //if chua ai dung gi nhau
+                        profile.friendRequestPending.filter(
+                          (friendId) => friendId._id == user._id
+                        ).length == 0 &&
+                          profile.friendRequestSent.filter(
+                            (friendId) => friendId._id == user._id
+                          ).length == 0 ? (
+                            <button
+                              className="btn btn-primary"
+                              onClick={() => addToFriendRequest(profile.userId._id)}
+                            >
+                              Add Friend
+                            </button>
+                          ) : profile.friendRequestPending.filter(
+                            (friendId) => friendId._id == user._id
+                          ).length > 0 ? (
+                              <button
+                                onClick={() => deleteFriendRequest(profile.userId._id, "client")}
+                                className="btn btn-danger "
+                              >
+                                Cancle Friend Request
+                              </button>
+                            ) : profile.friendRequestSent.filter(
+                              (friendId) => friendId._id == user._id
+                            ).length > 0 ? (
+                                <button
+                                  onClick={() => acceptFriendRequest(profile.userId._id, "client")}
+                                  className="btn btn-primary"
+                                >
+                                  Accept Friend Request{" "}
+                                </button>
+                              ) : (
+                                ""
+                              )}
+
                 </div>
-                <span style={{fontWeight:"bold",color:"#ff5e3a",marginBottom:"20px"}}>
-              {distanceInKmBetweenEarthCoordinates(Number(profile.userId.location.latitude),Number(profile.userId.location.longtitude),currentLa,currentLong)}</span>
+                <span style={{ fontWeight: "bold", color: "#ff5e3a", marginBottom: "20px" }}>
+                  {distanceInKmBetweenEarthCoordinates(Number(profile.userId.location.latitude), Number(profile.userId.location.longtitude), currentLa, currentLong)}</span>
               </div>
             </div>
             <div>
@@ -196,7 +196,7 @@ function ProfileCard({
                     <Moment date={profile.joinDay} fromNow></Moment>
                   </div>
                 </div>
-                
+
               </div>
             </div>
           </Slider>

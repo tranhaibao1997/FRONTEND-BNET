@@ -503,3 +503,9 @@
 .square-fill a:last-of-type {
     background-color: #ff5e3a !important;
 }
+
+.friend-avatar .author-thumb {
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+}
