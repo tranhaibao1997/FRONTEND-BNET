@@ -68,7 +68,7 @@ function AllProfiles({
 
   React.useEffect(() => {
     getLocation();
-    getAllProfiles();
+    getAllProfiles(minAge[0],maxAge[0],gender[0],currentPage[0]);
     // return()=>{
     //   clearProfiles()
     // }
