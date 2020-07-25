@@ -7,12 +7,16 @@ import {
   Marker,
   mapW,
 } from "google-maps-react";
-import { connect, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import profile from "../../reducers/profile";
+import { getLocation } from '../../actions/profile'
+import { PROFILE_UPDATE, UPDATE_ACCOUNT } from "../../actions/types";
+import MapStyle from '../../mapStyles'
 
-const mapStyles = {};
+const mapStyles={}
 function Location(props) {
   let user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch()
   let profile = useSelector((state) => state.profile.profile);
   let [longtitude, setLongtitute] = React.useState(0);
   let [latitude, setLatitude] = React.useState(0);
@@ -54,7 +58,9 @@ function Location(props) {
         `https://bnet-backend.herokuapp.com/api/profile/getLocation?longtitude=${longtitude}&latitude=${latitude}`
       );
       let data = await response.data;
-      console.log(data);
+      dispatch({ type: UPDATE_ACCOUNT, payload: response.data.data })
+      console.log(data)
+
     } catch (err) {
       console.log(err);
     }
@@ -76,7 +82,7 @@ function Location(props) {
             style={{ position: "relative", height: "600px" }}
             className="map-container"
           >
-            {user && profile ? (
+            {profile ? (
               <>
                 {" "}
                 <Map
@@ -84,24 +90,21 @@ function Location(props) {
                   zoom={14}
                   style={mapStyles}
                   initialCenter={{
-                    lat: Number(user.location.latitude),
-                    lng: Number(user.location.longtitude),
+                    lat: Number(profile.userId.location.latitude),
+                    lng: Number(profile.userId.location.longtitude),
                   }}
                   center={{
-                    lat: latitude,
-                    lng: longtitude,
+                    lat: profile.userId.location.latitude,
+                    lng: profile.userId.location.longtitude,
                   }}
                 >
                   <Marker
                     options={{
-                      icon: {
-                        url: user.avatar,
-                        scaledSize: new props.google.maps.Size(50, 50),
-                      },
+                    
                     }}
                     position={{
-                      lat: user.location.latitude,
-                      lng: user.location.longtitude,
+                      lat: profile.userId.location.latitude,
+                      lng: profile.userId.location.longtitude,
                     }}
                   ></Marker>
                   {profile.friendList &&
@@ -130,8 +133,8 @@ function Location(props) {
                 </Map>
               </>
             ) : (
-              ""
-            )}
+                ""
+              )}
           </div>
         </div>
       </div>

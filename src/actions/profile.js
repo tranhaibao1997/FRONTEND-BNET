@@ -1,4 +1,4 @@
-import { GET_PROFILE, GET_PROFILES, PROFILE_ERROR, PROFILE_UPDATE, CREATE_PROFILE, ADD_TO_FRIEND_REQUEST, UPDATE_POST, ADD_FRIEND, CLEAR_PROFILES } from '../actions/types'
+import { GET_PROFILE, GET_PROFILES, PROFILE_ERROR, PROFILE_UPDATE, CREATE_PROFILE, ADD_TO_FRIEND_REQUEST, UPDATE_POST, ADD_FRIEND, CLEAR_PROFILES, UPDATE_ACCOUNT } from '../actions/types'
 import axios from 'axios'
 import { loadUser } from './auth';
 import { toast } from 'react-toastify';
@@ -268,7 +268,7 @@ export const addToFriendRequest = id => async dispatch => {
         }
     }
     //delete From Request List
-export const deleteFriendRequest = (id,target) => async dispatch => {
+export const deleteFriendRequest = (id, target) => async dispatch => {
     try {
         let res = await axios.delete(`https://bnet-backend.herokuapp.com/api/profile/friendRequest/${id}?target=${target}`)
         console.log(res)
@@ -286,7 +286,7 @@ export const deleteFriendRequest = (id,target) => async dispatch => {
 
 //add to FriendList
 
-export const acceptFriendRequest = (id,target) => async dispatch => {
+export const acceptFriendRequest = (id, target) => async dispatch => {
 
     try {
         let res = await axios.post(`https://bnet-backend.herokuapp.com/api/profile/acceptFriendRequest/${id}?target=${target}`)
@@ -321,6 +321,27 @@ export const unFriend = id => async dispatch => {
         })
     } catch (err) {
         console.log(err)
+    }
+}
+
+export const getLocation = (longtitude, latitude) => async dispatch => {
+    try {
+        let response = await axios.get(
+            `https://bnet-backend.herokuapp.com/api/profile/getLocation?longtitude=${longtitude}&latitude=${latitude}`
+        );
+        let data = await response.data;
+        dispatch({
+            type: UPDATE_ACCOUNT,
+            payload: response.data.data
+        })
+        toast.success("UPDATED LOCATION !!!", {
+            position: "top-center",
+            autoClose: "3000"
+        })
+
+        console.log(data);
+    } catch (err) {
+        console.log(err);
     }
 }
 

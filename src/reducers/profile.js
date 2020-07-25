@@ -1,4 +1,4 @@
-import { GET_PROFILE, GET_PROFILES, PROFILE_ERROR, PROFILE_UPDATE, CLEAR_PROFILE, CREATE_PROFILE, ADD_FRIEND, CLEAR_PROFILES } from '../actions/types'
+import { GET_PROFILE, GET_PROFILES, PROFILE_ERROR, PROFILE_UPDATE, CLEAR_PROFILE, CREATE_PROFILE, ADD_FRIEND, CLEAR_PROFILES, UPDATE_ACCOUNT } from '../actions/types'
 
 const initialState = {
     clientProfile: null,
@@ -29,6 +29,11 @@ export default function(state = initialState, action) {
                 profiles: payload.data,
                 profilesLength: payload.dataLength,
                 loading: false
+            }
+        case UPDATE_ACCOUNT:
+            return {
+                ...state,
+                profile: {...state.profile, userId: payload }
             }
         case PROFILE_ERROR:
             return {
