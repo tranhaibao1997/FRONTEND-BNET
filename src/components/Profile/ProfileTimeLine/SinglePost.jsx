@@ -777,7 +777,7 @@ function SinglePost({ post, user, likePost, deletePost }) {
               <span style={{ color: "#888da8" }}>Comment</span>
             </a>
             {
-              !post.sharedContent && <Link onClick={()=>sharePost(post._id)} className="post-add-icon inline-items">
+              !post.sharedContent && !isShared && <Link onClick={()=>sharePost(post._id)} className="post-add-icon inline-items">
               <svg className="olymp-share-icon">
                 <use xlinkHref="#olymp-share-icon" />
               </svg>
