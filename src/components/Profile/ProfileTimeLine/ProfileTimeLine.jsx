@@ -3,12 +3,16 @@ import { connect } from "react-redux";
 import CreatePost from "./CreatePost";
 import AllPost from "./AllPost";
 import {Link} from 'react-router-dom'
+import SharePost from "./SharePost";
 
 function ProfileTimeLine({ profile, user }) {
   const [modalIsOpen, setIsOpen] = React.useState(false);
   function openModal() {
     setIsOpen(true);
   }
+
+  
+  
   let allImgs = [];
 
   if (profile) {
@@ -22,7 +26,6 @@ function ProfileTimeLine({ profile, user }) {
     <>
       {profile && user ? (
         <div className="container">
-          <CreatePost></CreatePost>
           <div className="row">
             {/* Main Content */}
             <div className="col col-xl-6 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
@@ -32,6 +35,8 @@ function ProfileTimeLine({ profile, user }) {
                   modalIsOpen={modalIsOpen}
                   setIsOpen={setIsOpen}
                 ></CreatePost>
+                <SharePost>
+                </SharePost>
 
                 {user._id === profile.userId._id || profile.friendList.map(elm => elm._id).includes(user._id) ? (
                   <>

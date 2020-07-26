@@ -9,6 +9,7 @@ import WeatherSection from './WeatherSection'
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Loading from '../Loading'
+import SharePost from '../Profile/ProfileTimeLine/SharePost'
 
 function Newfeed({ profile, user,getCurrentProfile,getNewsFeed }) {
   React.useEffect(() => {
@@ -39,6 +40,8 @@ function Newfeed({ profile, user,getCurrentProfile,getNewsFeed }) {
               modalIsOpen={modalIsOpen}
               setIsOpen={setIsOpen}
             ></CreatePost>
+              <SharePost>
+                </SharePost>
 
             {user._id === profile.userId._id ||
             profile.friendList.map((elm) => elm._id).includes(user._id) ? (

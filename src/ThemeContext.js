@@ -10,6 +10,9 @@ export default ({ children }) => {
     const [gender, setGender] = useState(null)
     const [minAge, setMinAge] = useState(0);
     const [maxAge, setMaxAge] = useState(100);
+    const [shareModal,setShareModal]=useState(false)
+    const [sharePostId,setSharePostId]=useState(null)
+
 
 
 
@@ -22,9 +25,12 @@ export default ({ children }) => {
         gender:[gender,setGender],
         minAge:[minAge,setMinAge],
         maxAge:[maxAge,setMaxAge],
-        currentPage:[currentPage,setCurrentPage]
+        currentPage:[currentPage,setCurrentPage],
+        shareModal:[shareModal,setShareModal],
+        sharePostId:[sharePostId,setSharePostId]
 
     };
+    
 
     return ( 
     <StoreContext.Provider value ={store}>{children}</StoreContext.Provider>

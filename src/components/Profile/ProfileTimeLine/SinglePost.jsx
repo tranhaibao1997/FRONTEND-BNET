@@ -9,8 +9,13 @@ import CommentBox from "./CommentBox";
 import SingleComment from "./SingleComment";
 import EditPost from "./EditPost";
 import { Link } from "react-router-dom";
+import {StoreContext} from '../../../ThemeContext'
+
 
 function SinglePost({ post, user, likePost, deletePost }) {
+
+  let { shareModal, sharePostId } = React.useContext(StoreContext);
+
   //code modal Post Detail
   function openModal() {
     setIsOpen(true);
@@ -48,7 +53,16 @@ function SinglePost({ post, user, likePost, deletePost }) {
     slidesToScroll: 1,
   };
 
-  console.log(post);
+  
+
+  function sharePost(id)
+  {
+    console.log("ZOOOOOOOOOOOOOOOOOOO")
+    shareModal[1](true)
+    sharePostId[1](id)
+  }
+
+
 
   return (
     <>
@@ -391,8 +405,14 @@ function SinglePost({ post, user, likePost, deletePost }) {
                 >
                   {post.author && post.author.lastName
                     ? post.author.firstName + " " + post.author.lastName
+                    
                     : post.name}
+                    
                 </Link>
+                {
+                  post.sharedContent && <span style={{marginLeft:"5px"}}> shared <Link>a post</Link></span>
+                }
+               
                 {post.peopleTag.length > 0 ? (
                   <div className="friend-tags">
                     - With
@@ -532,6 +552,164 @@ function SinglePost({ post, user, likePost, deletePost }) {
                   ></img>
                 ))}
           </div>
+          <div className="inside-textarea">
+              {post.sharedContent  ?(
+                <div className="previos-post">
+                  <article className="hentry post">
+                    <div className="post__author author vcard inline-items">
+                      <img
+                        src={
+                          post.sharedContent.author
+                            ? post.sharedContent.author.avatar
+                              ? post.sharedContent.author.avatar
+                              : post.sharedContent.avatar
+                            : post.sharedContent.avatar
+                        }
+                        alt="author123"
+                      />
+                      <div>
+                        <div
+                          style={{ display: "inline-flex" }}
+                          className="author-date"
+                        >
+                          <Link
+                            className="h6 post__author-name fn"
+                            to={`/profile/${
+                              post.sharedContent.author._id ? post.sharedContent.author._id : post.sharedContent.author
+                            }/timeline`}
+                          >
+                            {post.sharedContent.author && post.sharedContent.author.lastName
+                              ? post.sharedContent.author.firstName +
+                                " " +
+                                post.sharedContent.author.lastName
+                              : post.sharedContent.name}
+                          </Link>
+                          {post.sharedContent.peopleTag.length > 0 ? (
+                            <div className="friend-tags">
+                              - With
+                              {post.sharedContent.peopleTag.map((tag, index) => (
+                                <>
+                                  {index == 0 ? (
+                                    <Link
+                                      target="_blank"
+                                      to={`/profile/${tag._id}/timeline`}
+                                    >
+                                      {" "}
+                                      {tag.firstName}
+                                    </Link>
+                                  ) : (
+                                    <Link
+                                      target="_blank"
+                                      to={`/profile/${tag._id}/timeline`}
+                                    >
+                                      {" "}
+                                      , {tag.firstName}
+                                    </Link>
+                                  )}
+                                </>
+                              ))}
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                          {post.sharedContent.checkIn && (
+                            <span>
+                              - At <Link>{post.sharedContent.checkIn}</Link>
+                            </span>
+                          )}
+
+                          {post.sharedContent.author._id && post.sharedContent.onWall._id ? (
+                            <>
+                              {post.sharedContent.author._id.toString() !==
+                              post.sharedContent.onWall._id.toString() ? (
+                                <div style={{ display: "contents" }}>
+                                  <span>{""}</span>
+                                  <i
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                    }}
+                                    className="fas fa-long-arrow-alt-right"
+                                  ></i>
+                                  <Link
+                                    className="h6 post__author-name fn"
+                                    to={`/profile/${post.sharedContent.onWall._id}/timeline`}
+                                  >
+                                    <span>{""}</span>
+                                    {post.sharedContent.wallOwner}
+                                  </Link>
+                                </div>
+                              ) : (
+                                ""
+                              )}
+                            </>
+                          ) : (
+                            <>
+                              {post.sharedContent.author !== post.sharedContent.onWall ? (
+                                <div style={{ display: "contents" }}>
+                                  <span>{""}</span>
+                                  <i class="fas fa-long-arrow-alt-right"></i>
+                                  <a
+                                    className="h6 post__author-name fn"
+                                    href="02-ProfilePage.html"
+                                  >
+                                    <span>{""}</span>
+                                    {post.sharedContent.wallOwner}
+                                  </a>
+                                </div>
+                              ) : (
+                                ""
+                              )}
+                            </>
+                          )}
+                        </div>
+                        <div className="post__date">
+                          <time
+                            className="published"
+                            dateTime="2017-03-24T18:18"
+                          >
+                            <Moment date={post.sharedContent.date} fromNow></Moment>
+                          </time>
+                        </div>
+                      </div>
+                   
+                    </div>
+                    <p>{<Emoji text={post.sharedContent.text} />}</p>
+                    <div
+                      style={{ maxHeight: "400px", overflow: "auto" }}
+                      className="post-content"
+                    >
+                      {post.sharedContent.postImg
+                        ? post.sharedContent.postImg.map((imgObj) => (
+                            <img
+                              async
+                              
+                              style={{ marginTop: "20px", cursor: "pointer" }}
+                              src={imgObj.imgLink}
+                              alt={imgObj.imgLink}
+                            ></img>
+                          ))
+                        : post.sharedContent.images.map((img) => (
+                            <img
+                              async
+                             
+                              style={{ marginTop: "20px", cursor: "pointer" }}
+                              src={img.imgLink}
+                              alt={img.imgLink}
+                            ></img>
+                          ))}
+                    </div>
+                    
+
+                  </article>
+                </div>
+              )
+            
+            :post.isShared ?<>
+            <h1>This Content have been deleted</h1>
+            </> :""
+            }
+            </div>
           <div
             style={{ marginBottom: "8px",position:"relative" }}
             className="post-additional-info inline-items"
@@ -598,12 +776,15 @@ function SinglePost({ post, user, likePost, deletePost }) {
               </svg>
               <span style={{ color: "#888da8" }}>Comment</span>
             </a>
-            <a href="#" className="post-add-icon inline-items">
+            {
+              !post.sharedContent && <Link onClick={()=>sharePost(post._id)} className="post-add-icon inline-items">
               <svg className="olymp-share-icon">
                 <use xlinkHref="#olymp-share-icon" />
               </svg>
               <span style={{ color: "#888da8" }}>Share</span>
-            </a>
+            </Link>
+            }
+           
           </div>
           {/* <div className="control-block-button post-control-button">
                       <a href="#" className="btn btn-control">
