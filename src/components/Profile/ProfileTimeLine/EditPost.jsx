@@ -11,19 +11,60 @@ import { useParams } from "react-router-dom";
 import Axios from "axios";
 import { Link } from "react-router-dom";
 import { Multiselect } from "multiselect-react-dropdown";
+import {StoreContext} from '../../../ThemeContext'
 
 function EditPost({
   editModalIsOpen,
   setEditIsOpen,
   user,
   updatePost,
-  post,
   profile,
+  posts
 }) {
+  let { editModal, editPostId } = React.useContext(StoreContext);
+  let [post, setPost] = React.useState(null);
+
+  console.log(editModal,editPostId)
+
+  async function getPostbyId(id) {
+    if(id)
+    {
+      let post =posts.find(post => post._id===id)
+      // setPost(posts.find(post => post._id===id)[0])
+      setPost(post)
+      setLocation(post.checkIn)
+      setTagArray(post.peopleTag)
+      setPostBodyText(post.text)
+      setTextLength(post.text.length)
+      setOldImages(post.postImg)
+    }
+      
+    
+    // let res = await Axios.get(
+    //   `https://bnet-backend.herokuapp.com/api/post/single/${id}`
+    // );
+    // setPost(res.data.data);
+    // if(res.data.data)
+    // {
+    //   setLocation(res.data.data.checkIn)
+    //   setTagArray(res.data.data.peopleTag)
+    //   setPostBodyText(res.data.data.text)
+    //   setTextLength(res.data.data.text.length)
+    //   setOldImages(res.data.data.postImg)
+    // }
+   
+  }
+  React.useEffect(() => {
+    getPostbyId(editPostId[0]);
+  }, [editPostId[0]]);
+
+
+  console.log(post, "POST FROM EDIT")
+
   let [nearbyLocation, setNearbyLocation] = React.useState(null);
-  let [location, setLocation] = React.useState(post.checkIn);
+  let [location, setLocation] = React.useState(null);
   // let [state, setState] = React.useState({});
-  let [tagArray, setTagArray] = React.useState(post.peopleTag);
+  let [tagArray, setTagArray] = React.useState([]);
   // let [tagArrayStr, setTagArrayStr] = React.useState("");
   let [friend, setFriend] = React.useState(null);
   function onSelect(selectedList, selectedItem) {
@@ -61,9 +102,9 @@ function EditPost({
   }
 
   let [newImages, setNewImages] = useState([]);
-  let [oldImages, setOldImages] = useState(post.postImg);
-  let [textLength, setTextLength] = useState(post.text.length);
-  let [postBodyText, setPostBodyText] = useState(post.text);
+  let [oldImages, setOldImages] = useState([]);
+  let [textLength, setTextLength] = useState(0);
+  let [postBodyText, setPostBodyText] = useState("");
   console.log(newImages, oldImages);
 
   async function getImgLink() {
@@ -95,13 +136,14 @@ function EditPost({
 
   // console.log(images, "IMAGESSS");
 
+  console.log(editModal[0],"QUYET DINH MODAL BAT HAY K")
   function afterOpenModal() {
     // references are now sync'd and can be accessed.
     // subtitle.style.color = "#f00";
   }
 
   function closeModal() {
-    setEditIsOpen(false);
+    editModal[1](false)
   }
 
   async function editPost() {
@@ -120,7 +162,7 @@ function EditPost({
     console.log(newPost,'huhuuh')
     const bool = await updatePost(post._id, newPost);
     if (bool) {
-      setEditIsOpen(false);
+      editModal[1](false);
     } else {
     }
   }
@@ -183,9 +225,9 @@ function EditPost({
 
   return (
     <>
-      <Modal
+   <Modal
         ariaHideApp={false}
-        isOpen={editModalIsOpen}
+        isOpen={editModal[0]}
         onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         style={customStyles}
@@ -193,9 +235,10 @@ function EditPost({
       >
         <div style={{ alignItems: "center" }} className="modal-header">
           <h2>Edit Post</h2>
-          <i onClick={closeModal} class="fas fa-times close-modal-icon"></i>
+          <i onClick={()=>editModal[1](false)} class="fas fa-times close-modal-icon"></i>
         </div>
-        <div className="modal-body">
+        {
+          post && <div className="modal-body">
           <div className="modal-info-profile">
             <div
               style={{
@@ -266,7 +309,7 @@ function EditPost({
                   </div>
                 );
               })}
-              {oldImages.map((img, index) => {
+              {oldImages && oldImages.map((img, index) => {
                 return (
                   <div className="create-new-post-img">
                     <i
@@ -332,6 +375,7 @@ function EditPost({
             </button>
           </div>
         </div>
+        }
       </Modal>
       <Modal
         ariaHideApp={false}
@@ -391,11 +435,13 @@ function EditPost({
           )}
         </div>
       </Modal>
+     
     </>
   );
 }
 const mapStateToProps = (state) => ({
   user: state.auth.user,
   profile: state.profile.profile,
+  posts:state.post.posts
 });
 export default connect(mapStateToProps, { updatePost })(EditPost);

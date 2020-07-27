@@ -7,15 +7,16 @@ import { connect } from "react-redux";
 import { likePost, addComment, deletePost } from "../../../actions/post";
 import CommentBox from "./CommentBox";
 import SingleComment from "./SingleComment";
-import EditPost from "./EditPost";
 import { Link } from "react-router-dom";
 import {StoreContext} from '../../../ThemeContext'
 
 
 function SinglePost({ post, user, likePost, deletePost }) {
 
-  let { shareModal, sharePostId } = React.useContext(StoreContext);
-
+  let { shareModal, sharePostId,editModal,editPostId } = React.useContext(StoreContext);
+  React.useEffect(()=>{
+    console.log(editModal[0])
+  }, [editModal[0]])
   //code modal Post Detail
   function openModal() {
     setIsOpen(true);
@@ -42,7 +43,7 @@ function SinglePost({ post, user, likePost, deletePost }) {
   }
   //code modal Post Detail
 
-  const [editModalIsOpen, setEditIsOpen] = React.useState(false);
+  
 
   let [appear, setAppear] = React.useState(false);
   const settings = {
@@ -57,20 +58,23 @@ function SinglePost({ post, user, likePost, deletePost }) {
 
   function sharePost(id)
   {
-    console.log("ZOOOOOOOOOOOOOOOOOOO")
+  
     shareModal[1](true)
     sharePostId[1](id)
+  }
+
+  function editPost(id)
+  {
+    console.log("ZOOOOOOOOOOOOOOOOOOO")
+    editModal[1](true)
+    editPostId[1](id)
   }
 
 
 
   return (
     <>
-      <EditPost
-        editModalIsOpen={editModalIsOpen}
-        setEditIsOpen={setEditIsOpen}
-        post={post}
-      ></EditPost>
+    
       {/* THIS IS DETAIL POST MODAL */}
 
       <Modal
@@ -239,8 +243,7 @@ function SinglePost({ post, user, likePost, deletePost }) {
                           <li>
                             <a
                               className="edit-delete-post-btn"
-                              onClick={() => setEditIsOpen(true)}
-                            >
+                              onClick={() =>editPost(post._id)}                            >
                               Edit Post
                             </a>
                           </li>
@@ -505,7 +508,8 @@ function SinglePost({ post, user, likePost, deletePost }) {
                     <li>
                       <a
                         className="edit-delete-post-btn"
-                        onClick={() => setEditIsOpen(true)}
+                        onClick={() => {editPost(post._id)}
+                        }
                       >
                         Edit Post
                       </a>
@@ -777,7 +781,7 @@ function SinglePost({ post, user, likePost, deletePost }) {
               <span style={{ color: "#888da8" }}>Comment</span>
             </a>
             {
-              !post.sharedContent && !isShared && <Link onClick={()=>sharePost(post._id)} className="post-add-icon inline-items">
+              !post.sharedContent && <Link onClick={()=>sharePost(post._id)} className="post-add-icon inline-items">
               <svg className="olymp-share-icon">
                 <use xlinkHref="#olymp-share-icon" />
               </svg>

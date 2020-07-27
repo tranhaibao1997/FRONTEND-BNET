@@ -4,6 +4,7 @@ import CreatePost from "./CreatePost";
 import AllPost from "./AllPost";
 import {Link} from 'react-router-dom'
 import SharePost from "./SharePost";
+import EditPost from "./EditPost";
 
 function ProfileTimeLine({ profile, user }) {
   const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -37,6 +38,9 @@ function ProfileTimeLine({ profile, user }) {
                 ></CreatePost>
                 <SharePost>
                 </SharePost>
+                <EditPost>
+                  
+                </EditPost>
 
                 {user._id === profile.userId._id || profile.friendList.map(elm => elm._id).includes(user._id) ? (
                   <>
