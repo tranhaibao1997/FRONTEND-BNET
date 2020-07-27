@@ -9,14 +9,14 @@ import {
 } from "google-maps-react";
 import { useSelector, useDispatch } from "react-redux";
 import profile from "../../reducers/profile";
-import { getLocation } from '../../actions/profile'
+import { getLocation } from "../../actions/profile";
 import { PROFILE_UPDATE, UPDATE_ACCOUNT } from "../../actions/types";
-import MapStyle from '../../mapStyles'
+import MapStyle from "../../mapStyles";
 
-const mapStyles={}
+const mapStyles = {};
 function Location(props) {
   let user = useSelector((state) => state.auth.user);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   let profile = useSelector((state) => state.profile.profile);
   let [longtitude, setLongtitute] = React.useState(0);
   let [latitude, setLatitude] = React.useState(0);
@@ -58,9 +58,8 @@ function Location(props) {
         `https://bnet-backend.herokuapp.com/api/profile/getLocation?longtitude=${longtitude}&latitude=${latitude}`
       );
       let data = await response.data;
-      dispatch({ type: UPDATE_ACCOUNT, payload: response.data.data })
-      console.log(data)
-
+      dispatch({ type: UPDATE_ACCOUNT, payload: response.data.data });
+      console.log(data);
     } catch (err) {
       console.log(err);
     }
@@ -99,9 +98,7 @@ function Location(props) {
                   }}
                 >
                   <Marker
-                    options={{
-                    
-                    }}
+                    options={{}}
                     position={{
                       lat: profile.userId.location.latitude,
                       lng: profile.userId.location.longtitude,
@@ -119,22 +116,32 @@ function Location(props) {
                             options={{
                               icon: {
                                 url: friend.avatar,
-                                scaledSize: new props.google.maps.Size(50, 50),
+                                scaledSize: new props.google.maps.Size(30, 30),
                               },
                             }}
                             title={friend.firstName + " " + friend.lastName}
                             id={friend._id}
                             key={friend._id}
                             position={{ lat: lat, lng: lng }}
-                          ></Marker>
+                          >
+                            <InfoWindow
+                              
+                              visible={true}
+                              open={true}
+                              content="OK LAAAAA"
+                      
+                            >
+                              <div>Your Location Here!</div>
+                            </InfoWindow>
+                          </Marker>
                         )
                       );
                     })}
                 </Map>
               </>
             ) : (
-                ""
-              )}
+              ""
+            )}
           </div>
         </div>
       </div>

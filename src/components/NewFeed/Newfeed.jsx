@@ -10,6 +10,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Loading from '../Loading'
 import SharePost from '../Profile/ProfileTimeLine/SharePost'
+import EditPost from "../Profile/ProfileTimeLine/EditPost";
 
 function Newfeed({ profile, user,getCurrentProfile,getNewsFeed }) {
   React.useEffect(() => {
@@ -42,6 +43,7 @@ function Newfeed({ profile, user,getCurrentProfile,getNewsFeed }) {
             ></CreatePost>
               <SharePost>
                 </SharePost>
+                <EditPost></EditPost>
 
             {user._id === profile.userId._id ||
             profile.friendList.map((elm) => elm._id).includes(user._id) ? (

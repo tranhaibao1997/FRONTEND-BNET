@@ -16,6 +16,7 @@ import {
 import ProfilePhotos from "./ProfilePhotos";
 import PostDetail from "./PostDetail";
 
+
 function Profile({ match, profile, getProfileById }) {
   React.useEffect(() => {
     getProfileById(id);
@@ -29,6 +30,7 @@ function Profile({ match, profile, getProfileById }) {
   console.log(path);
   return (
     <Fragment>
+      <div style={{ height: "68px" }}></div>
       <ProfileBanner id={id}></ProfileBanner>
       <Switch>
         <Route
@@ -42,7 +44,7 @@ function Profile({ match, profile, getProfileById }) {
         {/* render={props => <Login setUser={setUser} {...props}></Login>} */}
         <Route path={`/profile/:id/friend`} component={ProfileFriend}></Route>
         <Route path={`/profile/:id/photos`} component={ProfilePhotos}></Route>
-        <Route path={`/profile/:id/timeline/:postId`} component={PostDetail}></Route>
+     
       </Switch>
     </Fragment>
   );

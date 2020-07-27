@@ -282,6 +282,20 @@ export const deleteFriendRequest = (id, target) => async dispatch => {
     }
 }
 
+export const deleteFriendRequestPending = (id, target) => async dispatch => {
+    try {
+        let res = await axios.delete(`https://bnet-backend.herokuapp.com/api/profile/friendRequestPending/${id}?target=${target}`)
+        console.log(res)
+        dispatch({
+            type: PROFILE_UPDATE,
+            payload: res.data.data
+        })
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 
 
 //add to FriendList

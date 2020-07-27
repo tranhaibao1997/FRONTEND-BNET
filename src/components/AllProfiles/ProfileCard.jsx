@@ -9,6 +9,7 @@ import {
   deleteFriendRequest,
   acceptFriendRequest,
   unFriend,
+  deleteFriendRequestPending,
 } from "../../actions/profile";
 
 function ProfileCard({
@@ -17,9 +18,10 @@ function ProfileCard({
   addToFriendRequest,
   deleteFriendRequest,
   acceptFriendRequest,
+  deleteFriendRequestPending,
   unFriend,
   currentLa,
-  currentLong
+  currentLong,
 }) {
   var settings = {
     dots: true,
@@ -29,12 +31,12 @@ function ProfileCard({
     slidesToScroll: 1,
   };
   function degreesToRadians(degrees) {
-    return degrees * Math.PI / 180;
+    return (degrees * Math.PI) / 180;
   }
 
   function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
     if (lat1 == 0 && lon1 == 0) {
-      return "This user hadn't updated location"
+      return "This user hadn't updated location";
     }
     var earthRadiusKm = 6371;
 
@@ -44,7 +46,8 @@ function ProfileCard({
     lat1 = degreesToRadians(lat1);
     lat2 = degreesToRadians(lat2);
 
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return `${Math.floor(earthRadiusKm * c * 1000)} m away`;
@@ -78,19 +81,18 @@ function ProfileCard({
             </ul>
           </div> */}
           <div className="friend-avatar">
-          <Link to={`/profile/${profile.userId._id}/timeline`}>
-            <div style={{
-              backgroundImage:
-                "url(" +
-                `${profile.userId ? profile.userId.avatar : ""}` +
-                ")",
-            }} className="author-thumb">
-             
-         
-            </div>
+            <Link to={`/profile/${profile.userId._id}/timeline`}>
+              <div
+                style={{
+                  backgroundImage:
+                    "url(" +
+                    `${profile.userId ? profile.userId.avatar : ""}` +
+                    ")",
+                }}
+                className="author-thumb"
+              ></div>
             </Link>
             <div className="author-content">
-
               <a href="#" className="h5 author-name">
                 {profile.userId.firstName + " " + profile.userId.lastName}
               </a>
@@ -124,65 +126,113 @@ function ProfileCard({
                   ) : user._id == profile.userId._id ? (
                     ""
                   ) : profile.friendList
-                    .map((friend) => friend._id)
-                    .includes(user._id) ? (
-                          <>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                              className="control-block-button"
-                            >
-                              <button
-                                onClick={() => unFriend(profile.userId._id)}
-                                style={{ marginRight: "10px" }}
-                                className="btn btn-danger"
-                              >
-                                Unfriend
+                      .map((friend) => friend._id)
+                      .includes(user._id) ? (
+                    <>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        className="control-block-button"
+                      >
+                        <button
+                          onClick={() => unFriend(profile.userId._id)}
+                          style={{ marginRight: "10px" }}
+                          className="btn btn-danger"
+                        >
+                          Unfriend
                         </button>
-                              <button className="btn btn-success">Chat</button>
-                            </div>
-                          </>
-                        ) : //if chua ai dung gi nhau
-                        profile.friendRequestPending.filter(
-                          (friendId) => friendId._id == user._id
-                        ).length == 0 &&
-                          profile.friendRequestSent.filter(
-                            (friendId) => friendId._id == user._id
-                          ).length == 0 ? (
-                            <button
-                              className="btn btn-primary"
-                              onClick={() => addToFriendRequest(profile.userId._id)}
-                            >
-                              Add Friend
-                            </button>
-                          ) : profile.friendRequestPending.filter(
-                            (friendId) => friendId._id == user._id
-                          ).length > 0 ? (
-                              <button
-                                onClick={() => deleteFriendRequest(profile.userId._id, "client")}
-                                className="btn btn-danger "
-                              >
-                                Cancle Friend Request
-                              </button>
-                            ) : profile.friendRequestSent.filter(
-                              (friendId) => friendId._id == user._id
-                            ).length > 0 ? (
-                                <button
-                                  onClick={() => acceptFriendRequest(profile.userId._id, "client")}
-                                  className="btn btn-primary"
-                                >
-                                  Accept Friend Request{" "}
-                                </button>
-                              ) : (
-                                ""
-                              )}
-
+                        <button className="btn btn-success">Chat</button>
+                      </div>
+                    </>
+                  ) : //if chua ai dung gi nhau
+                  profile.friendRequestPending.filter(
+                      (friendId) => friendId._id == user._id
+                    ).length == 0 &&
+                    profile.friendRequestSent.filter(
+                      (friendId) => friendId._id == user._id
+                    ).length == 0 ? (
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => addToFriendRequest(profile.userId._id)}
+                    >
+                      Add Friend
+                    </button>
+                  ) : profile.friendRequestPending.filter(
+                      (friendId) => friendId._id == user._id
+                    ).length > 0 ? (
+                    <button
+                      onClick={() =>
+                        deleteFriendRequest(profile.userId._id, "client")
+                      }
+                      className="btn btn-danger "
+                    >
+                      Cancle Friend Request
+                    </button>
+                  ) : profile.friendRequestSent.filter(
+                      (friendId) => friendId._id == user._id
+                    ).length > 0 ? (
+                    // <div className="buttons">
+                    //    <button
+                    //     onClick={() => acceptFriendRequest(profile.userId._id, "client")}
+                    //     className="btn btn-primary"
+                    //   >
+                    //     Accept Friend Request{" "}
+                    //   </button>
+                    //   <button
+                    //     onClick={() => acceptFriendRequest(profile.userId._id, "client")}
+                    //     className="btn btn-primary"
+                    //   >
+                    //     Accept Friend Request{" "}
+                    //   </button>
+                    // </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      className="control-block-button"
+                    >
+                      <button
+                        onClick={() =>
+                          deleteFriendRequestPending(
+                            profile.userId._id,
+                            "client"
+                          )
+                        }
+                        style={{ marginRight: "10px" }}
+                        className="btn btn-danger"
+                      >
+                        Delele 
+                      </button>
+                      <button
+                        onClick={() => acceptFriendRequest(profile.userId._id, "client")}
+                        className="btn btn-primary"
+                      >
+                        Accept {" "}
+                      </button>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
-                <span style={{ fontWeight: "bold", color: "#ff5e3a", marginBottom: "20px" }}>
-                  {distanceInKmBetweenEarthCoordinates(Number(profile.userId.location.latitude), Number(profile.userId.location.longtitude), currentLa, currentLong)}</span>
+                <span
+                  style={{
+                    fontWeight: "bold",
+                    color: "#ff5e3a",
+                    marginBottom: "20px",
+                  }}
+                >
+                  {distanceInKmBetweenEarthCoordinates(
+                    Number(profile.userId.location.latitude),
+                    Number(profile.userId.location.longtitude),
+                    currentLa,
+                    currentLong
+                  )}
+                </span>
               </div>
             </div>
             <div>
@@ -196,7 +246,6 @@ function ProfileCard({
                     <Moment date={profile.joinDay} fromNow></Moment>
                   </div>
                 </div>
-
               </div>
             </div>
           </Slider>
@@ -212,4 +261,5 @@ export default connect(mapStateToProps, {
   deleteFriendRequest,
   acceptFriendRequest,
   unFriend,
+  deleteFriendRequestPending
 })(ProfileCard);

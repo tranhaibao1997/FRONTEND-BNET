@@ -3,10 +3,11 @@ import { connect } from "react-redux";
 import {
   deleteFriendRequest,
   acceptFriendRequest,
+  deleteFriendRequestPending
 } from "../../actions/profile";
 import {Link} from 'react-router-dom'
 
-function FriendRecieved({ profile, deleteFriendRequest,acceptFriendRequest }) {
+function FriendRecieved({ profile, deleteFriendRequestPending,acceptFriendRequest }) {
   return (
     <div>
       <div className="ui-block">
@@ -56,7 +57,7 @@ function FriendRecieved({ profile, deleteFriendRequest,acceptFriendRequest }) {
                           color: "white",
                           cursor: "pointer",
                         }}
-                        onClick={() => deleteFriendRequest(friendRQ._id,"owner")}
+                        onClick={() => deleteFriendRequestPending(friendRQ._id,"owner")}
                         className="accept-request request-del"
                       >
                         <span
@@ -85,6 +86,6 @@ const mapStateToProps = (state) => ({
   profile: state.profile.profile,
 });
 
-export default connect(mapStateToProps, { deleteFriendRequest,acceptFriendRequest})(
+export default connect(mapStateToProps, { deleteFriendRequest,acceptFriendRequest,deleteFriendRequestPending})(
   FriendRecieved
 );

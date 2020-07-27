@@ -22,6 +22,7 @@ import { StoreContext } from "./ThemeContext";
 import LeftNav from './components/Nav/LeftNav';
 import RightNav from './components/Nav/RightNav';
 
+
 if (localStorage.token) {
   setAuthToken(localStorage.token)
 }
@@ -47,6 +48,7 @@ export default function App() {
             <PrivateRoute path="/newsfeed" component={Newfeed}></PrivateRoute>
             <PrivateRoute path="/profile/:id" component={Profile}></PrivateRoute>
             <PrivateRoute path="/dashboard" component={Dashboard}></PrivateRoute>
+            
             {/* <Route path="/dashboard" component={Dashboard}></Route> */}
           </Switch>
 
