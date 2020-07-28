@@ -68,7 +68,7 @@ function AllProfiles({
 
   React.useEffect(() => {
     getLocation();
-    getAllProfiles(minAge[0],maxAge[0],gender[0],currentPage[0]);
+    getAllProfiles(minAge[0], maxAge[0], gender[0], currentPage[0]);
     // return()=>{
     //   clearProfiles()
     // }
@@ -79,18 +79,23 @@ function AllProfiles({
     // currentPage[1](numPage);
     // getDataFromAPI(numPage);
     currentPage[1](numPage)
-    getAllProfiles(minAge[0],maxAge[0],gender[0],numPage)
+    getAllProfiles(minAge[0], maxAge[0], gender[0], numPage)
 
     // props.getProductListBySearch(numPage)
     //fetch a data
     //or update a query to get data
   };
 
+  function getSearchText(searchtext) {
+    console.log(searchtext,"SEARCH")
+  }
+
   const classes = useStyles();
   const [age, setAge] = React.useState("");
 
   const handleChange = (event) => {
     setAge(event.target.value);
+    
   };
   let { navBarAppear } = React.useContext(StoreContext);
   navBarAppear[1](true);
@@ -111,6 +116,7 @@ function AllProfiles({
               <form className="w-search">
                 <div className="form-group with-button is-empty">
                   <input
+                    onChange={(e) => getSearchText(e.target.value)}
                     className="form-control"
                     type="text"
                     placeholder="Search Users..."
@@ -123,7 +129,7 @@ function AllProfiles({
                   <span className="material-input" />
                 </div>
               </form>
-           
+
             </div>
           </div>
           <div className="profile-cards-container">
@@ -156,12 +162,12 @@ function AllProfiles({
         </div>
       </div>
       <Pagination
-            className="pagination-class"
-            currentPage={currentPage[0]}
-            totalPages={Math.ceil( profilesLength / 9)}
-            changeCurrentPage={changePage}
-            theme="square-fill"
-          />
+        className="pagination-class"
+        currentPage={currentPage[0]}
+        totalPages={Math.ceil(profilesLength / 9)}
+        changeCurrentPage={changePage}
+        theme="square-fill"
+      />
     </div>
   );
 }
@@ -169,7 +175,7 @@ const mapStateToProps = (state) => ({
   profiles: state.profile.profiles,
   user: state.auth.user,
   profile: state.profile.profile,
-  profilesLength:state.profile.profilesLength
+  profilesLength: state.profile.profilesLength
 });
 
 export default connect(mapStateToProps, { getAllProfiles, clearProfiles })(
