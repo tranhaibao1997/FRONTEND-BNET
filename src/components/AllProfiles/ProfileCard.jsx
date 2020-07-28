@@ -50,7 +50,7 @@ function ProfileCard({
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return `${Math.floor(earthRadiusKm * c * 1000)} m away`;
+    return `${Math.floor(earthRadiusKm * c )} km away`;
   }
   return (
     <>
@@ -119,9 +119,14 @@ function ProfileCard({
                 <div className="buttons">
                   {!user ? (
                     <>
-                      <button type="button" className="btn btn-primary">
-                        Login To Add{" "}
-                      </button>
+                     
+                        <Link to="/login">
+                        <button type="button" className="btn btn-primary">
+                          Login To Add
+                        </button>
+                        </Link>
+                       
+                      
                     </>
                   ) : user._id == profile.userId._id ? (
                     ""

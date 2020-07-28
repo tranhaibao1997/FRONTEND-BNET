@@ -1,25 +1,22 @@
 import React from "react";
 import Axios from "axios";
-import {
-  Map,
-  GoogleApiWrapper,
-  InfoWindow,
-  Marker,
-  mapW,
-} from "google-maps-react";
+import { withGoogleMap, GoogleMap, Marker, InfoWindow } from "react-google-maps";
 import { useSelector, useDispatch } from "react-redux";
 import profile from "../../reducers/profile";
 import { getLocation } from "../../actions/profile";
 import { PROFILE_UPDATE, UPDATE_ACCOUNT } from "../../actions/types";
 import MapStyle from "../../mapStyles";
 
-const mapStyles = {};
+
+
 function Location(props) {
-  let user = useSelector((state) => state.auth.user);
-  const dispatch = useDispatch();
-  let profile = useSelector((state) => state.profile.profile);
-  let [longtitude, setLongtitute] = React.useState(0);
-  let [latitude, setLatitude] = React.useState(0);
+  let google = window.google
+
+
+  let markers = [];
+  let map;
+  let [longtitude, setLongtitute] = React.useState(null);
+  let [latitude, setLatitude] = React.useState(null);
   console.log(longtitude, latitude);
   const errorHandler = (err) => {
     if (err.code == 1) {
@@ -30,7 +27,9 @@ function Location(props) {
   };
 
   function getLocation() {
-    console.log("SAO K CHAYYY");
+
+    let markers = [];
+    let map;
     if (navigator.geolocation) {
       // timeout at 60000 milliseconds (60 seconds)
       var options = { timeout: 60000 };
@@ -44,14 +43,10 @@ function Location(props) {
     }
   }
   const showLocation = (position) => {
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
     setLongtitute(position.coords.longitude);
     setLatitude(position.coords.latitude);
-
-    getWeather(longitude, latitude);
+    getWeather(position.coords.longitude, position.coords.latitude)
   };
-
   async function getWeather(longtitude, latitude) {
     try {
       let response = await Axios.get(
@@ -65,89 +60,112 @@ function Location(props) {
     }
   }
 
-  console.log(profile.friendList, "HELLO");
-  console.log(user.location.longtitude);
+  let profile = useSelector(state => state.profile.profile)
+  let user = useSelector(state => state.auth.user)
+  const dispatch = useDispatch();
+  let friendList = profile.friendList
+
+  console.log(friendList, "FRIEND LIST")
+
+
+
+
+
+
+  console.log(longtitude, latitude)
+
+
+  React.useEffect(() => {
+    getLocation()
+    initMap()
+    drop()
+    return () => {
+
+    }
+  }, [longtitude, latitude])
+  function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 12,
+      center: {
+        lat: latitude,
+        lng: longtitude
+      }
+    });
+    new google.maps.Marker({
+
+      position: { lat: latitude, lng: longtitude },
+      map,
+      title: "Hello World!"
+    });
+  }
+  function drop() {
+    clearMarkers();
+
+    for (let i = 0; i < friendList.length; i++) {
+      addMarkerWithTimeout(friendList[i].location, friendList[i], i * 200);
+
+    }
+
+  }
+
+
+
+  function addMarkerWithTimeout(position, friend, timeout) {
+
+    const myLatLng = { lat: parseFloat(position.latitude), lng: parseFloat(position.longtitude) };
+    console.log(friend, "FRIEND IN MAP")
+    window.setTimeout(() => {
+      var marker = new google.maps.Marker({
+        icon: {
+          url: friend.avatar,
+          scaledSize: new google.maps.Size(30, 30),
+        },
+
+        position: myLatLng,
+        map,
+        animation: google.maps.Animation.DROP
+      })
+      markers.push(marker);
+      marker.addListener("click", function () {
+        var contentString = `<div id="content">
+          <div id="siteNotice">
+          </div> 
+          <h1 id="firstHeading" class="firstHeading">${`${friend.firstName} ${friend.lastName}`}</h1> 
+          <div id="bodyContent">
+          <img style="width:200px,height:200px,boder-radius:50%" src=${friend.avatar}> 
+          </div> 
+          </div>`;
+
+        var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+        infowindow.open(map, marker);
+
+      });
+    }, timeout);
+  }
+
+  function clearMarkers() {
+    for (let i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+    markers = [];
+  }
+
   return (
-    <div>
+    <>
       <div className="ui-block">
         <div className="ui-block-title">
           <h6 className="title">Friend Locations</h6>
         </div>
-        <div className="ui-block-content">
-          <button onClick={() => getLocation()} className="btn btn-primary">
-            Get Current Location
-          </button>
-          <div
-            style={{ position: "relative", height: "600px" }}
-            className="map-container"
-          >
-            {profile ? (
-              <>
-                {" "}
-                <Map
-                  google={props.google}
-                  zoom={14}
-                  style={mapStyles}
-                  initialCenter={{
-                    lat: Number(profile.userId.location.latitude),
-                    lng: Number(profile.userId.location.longtitude),
-                  }}
-                  center={{
-                    lat: profile.userId.location.latitude,
-                    lng: profile.userId.location.longtitude,
-                  }}
-                >
-                  <Marker
-                    options={{}}
-                    position={{
-                      lat: profile.userId.location.latitude,
-                      lng: profile.userId.location.longtitude,
-                    }}
-                  ></Marker>
-                  {profile.friendList &&
-                    profile.friendList.map((friend, index) => {
-                      let lat = Number(friend.location.latitude);
-                      let lng = Number(friend.location.longtitude);
-                      console.log(lat, lng);
-                      return (
-                        lat !== 0 &&
-                        lng !== 0 && (
-                          <Marker
-                            options={{
-                              icon: {
-                                url: friend.avatar,
-                                scaledSize: new props.google.maps.Size(30, 30),
-                              },
-                            }}
-                            title={friend.firstName + " " + friend.lastName}
-                            id={friend._id}
-                            key={friend._id}
-                            position={{ lat: lat, lng: lng }}
-                          >
-                            <InfoWindow
-                              
-                              visible={true}
-                              open={true}
-                              content="OK LAAAAA"
-                      
-                            >
-                              <div>Your Location Here!</div>
-                            </InfoWindow>
-                          </Marker>
-                        )
-                      );
-                    })}
-                </Map>
-              </>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
       </div>
-    </div>
+      <div className="ui-block-content">
+
+        <div id="map"></div>
+      </div>
+
+
+    </>
   );
 }
-export default GoogleApiWrapper({
-  apiKey: "AIzaSyCTmTwjNOt-9uWocI3n2BlUqmQYc4AM3SM",
-})(Location);
+export default Location;

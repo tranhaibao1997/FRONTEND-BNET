@@ -21,6 +21,7 @@
         "react-dom": "^16.13.1",
         "react-emoji": "^0.5.0",
         "react-emoji-render": "^1.2.4",
+        "react-google-maps": "^9.4.5",
         "react-loader-spinner": "^3.1.14",
         "react-loading": "^2.0.3",
         "react-loadingg": "^1.7.2",
