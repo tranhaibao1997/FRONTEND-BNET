@@ -45,24 +45,25 @@ function Location(props) {
   const showLocation = (position) => {
     setLongtitute(position.coords.longitude);
     setLatitude(position.coords.latitude);
-    getWeather(position.coords.longitude, position.coords.latitude)
+    // getWeather(position.coords.longitude, position.coords.latitude)
   };
-  async function getWeather(longtitude, latitude) {
-    try {
-      let response = await Axios.get(
-        `https://bnet-backend.herokuapp.com/api/profile/getLocation?longtitude=${longtitude}&latitude=${latitude}`
-      );
-      let data = await response.data;
-      dispatch({ type: UPDATE_ACCOUNT, payload: response.data.data });
-      console.log(data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  // async function getWeather(longtitude, latitude) {
+  //   try {
+  //     let response = await Axios.get(
+  //       `https://bnet-backend.herokuapp.com/api/profile/getLocation?longtitude=${longtitude}&latitude=${latitude}`
+  //     );
+  //     let data = await response.data;
+  //     dispatch({ type: UPDATE_ACCOUNT, payload: response.data.data });
+  //     console.log(data);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+  const dispatch = useDispatch();
 
   let profile = useSelector(state => state.profile.profile)
   let user = useSelector(state => state.auth.user)
-  const dispatch = useDispatch();
+
   let friendList = profile.friendList
 
   console.log(friendList, "FRIEND LIST")
@@ -87,13 +88,16 @@ function Location(props) {
     map = new google.maps.Map(document.getElementById("map"), {
       zoom: 12,
       center: {
-        lat: latitude,
-        lng: longtitude
+        lat: Number(profile.userId.location.latitude),
+        lng: Number(profile.userId.location.longtitude)
       }
     });
     new google.maps.Marker({
 
-      position: { lat: latitude, lng: longtitude },
+      position: {
+        lat: Number(profile.userId.location.latitude),
+        lng: Number(profile.userId.location.longtitude)
+      },
       map,
       title: "Hello World!"
     });

@@ -86,9 +86,7 @@ function AllProfiles({
     //or update a query to get data
   };
 
-  function getSearchText(searchtext) {
-    console.log(searchtext,"SEARCH")
-  }
+ 
 
   const classes = useStyles();
   const [age, setAge] = React.useState("");
@@ -116,7 +114,7 @@ function AllProfiles({
               <form className="w-search">
                 <div className="form-group with-button is-empty">
                   <input
-                    onChange={(e) => getSearchText(e.target.value)}
+                    // onChange={(e) => getSearchText(e.target.value)}
                     className="form-control"
                     type="text"
                     placeholder="Search Users..."

@@ -50,11 +50,12 @@ function FilterSection({ getAllProfiles }) {
             setLookingFor(null)
         }
         gender[1](genderString)
+        console.log(genderString,'huhuhuh bug quan que')
     };
     function filterFriend() {
-        console.log(lookingFor)
+       
 
-        getAllProfiles(ageValue[0], ageValue[1], lookingFor)
+        getAllProfiles(ageValue[0], ageValue[1],gender[0])
         // minAge[1](0)
         // maxAge[1](100)
         currentPage[1](1)

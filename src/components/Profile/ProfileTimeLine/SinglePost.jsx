@@ -387,7 +387,7 @@ function SinglePost({ post, user, likePost, deletePost }) {
       <div className="ui-block">
         {/* Post */}
         <article className="hentry post">
-          <div className="post__author author vcard inline-items">
+          <div  className="post__author author vcard inline-items">
             <img
               src={
                 post.author
@@ -560,7 +560,7 @@ function SinglePost({ post, user, likePost, deletePost }) {
               {post.sharedContent  ?(
                 <div className="previos-post">
                   <article className="hentry post">
-                    <div className="post__author author vcard inline-items">
+                    <div  className="post__author author vcard inline-items">
                       <img
                         src={
                           post.sharedContent.author

@@ -12,6 +12,18 @@ import Axios from "axios";
 import { Link } from "react-router-dom";
 import { Multiselect } from "multiselect-react-dropdown";
 import {StoreContext} from '../../../ThemeContext'
+import { PROFILE_UPDATE, UPDATE_ACCOUNT } from "../../../actions/types";
+import { useDispatch } from 'react-redux'
+import usePlacesAutocomplete, { getGeocode } from "use-places-autocomplete";
+import "@reach/combobox/styles.css";
+
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxPopover,
+  ComboboxList,
+  ComboboxOption
+} from "@reach/combobox";
 
 function EditPost({
   editModalIsOpen,
@@ -61,7 +73,7 @@ function EditPost({
 
   console.log(post, "POST FROM EDIT")
 
-  let [nearbyLocation, setNearbyLocation] = React.useState(null);
+  
   let [location, setLocation] = React.useState(null);
   // let [state, setState] = React.useState({});
   let [tagArray, setTagArray] = React.useState([]);
@@ -167,42 +179,7 @@ function EditPost({
     }
   }
 
-  const showLocation = (position) => {
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
-    getNearbyLocations(latitude, longitude);
-  };
-
-  const errorHandler = (err) => {
-    if (err.code == 1) {
-      alert("Error: Access is denied!");
-    } else if (err.code == 2) {
-      alert("Error: Position is unavailable!");
-    }
-  };
-
-  const getLocation = () => {
-    openLocationModal();
-    if (navigator.geolocation) {
-      // timeout at 60000 milliseconds (60 seconds)
-      var options = { timeout: 60000 };
-      navigator.geolocation.getCurrentPosition(
-        showLocation,
-        errorHandler,
-        options
-      );
-    } else {
-      alert("Sorry, browser does not support geolocation!");
-    }
-  };
-
-  async function getNearbyLocations(latitude, longitude) {
-    let res = await Axios.get(
-      `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1000&key=AIzaSyCTmTwjNOt-9uWocI3n2BlUqmQYc4AM3SM`
-    );
-    setNearbyLocation(res.data.results);
-  }
-  console.log(nearbyLocation);
+  
 
   const [modalFriendIsOpen, setFriendIsOpen] = React.useState(false);
   function openFriendModal() {
@@ -222,6 +199,59 @@ function EditPost({
   function closeLocationModal() {
     setLocationIsOpen(false);
   }
+
+
+  const {
+    ready,
+    value,
+    suggestions: { status, data },
+    setValue,
+
+
+  } = usePlacesAutocomplete();
+
+  const handleInput = (e) => {
+    setValue(e.target.value);
+    setLocation(e.target.value)
+  };
+
+  const handleSelect = (val) => {
+    getGeocode({ address: val }).then(res => {
+      console.log(res[0].geometry.viewport.Va.i, res[0].geometry.viewport.Za.i); initMap(res[0].geometry.viewport.Za.i, res[0].geometry.viewport.Va.i);getWeather(res[0].geometry.viewport.Va.i, res[0].geometry.viewport.Za.i)
+    })
+    setValue(val, false);
+
+  };
+  let google = window.google
+  function initMap(latitude = 0, longtitude = 0) {
+    let map = new google.maps.Map(document.getElementById("addressmap"), {
+      zoom: 18,
+      center: {
+        lat: latitude,
+        lng: longtitude
+      }
+    });
+    new google.maps.Marker({
+
+      position: { lat: latitude, lng: longtitude },
+      map,
+      title: location
+    });
+  }
+
+  async function getWeather(longtitude, latitude) {
+    try {
+      let response = await Axios.get(
+        `https://bnet-backend.herokuapp.com/api/profile/getLocation?longtitude=${longtitude}&latitude=${latitude}`
+      );
+      let data = await response.data;
+      dispatch({ type: UPDATE_ACCOUNT, payload: response.data.data });
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -332,7 +362,7 @@ function EditPost({
               ></i>
               {profile.userId._id == user._id ? (
                 <i
-                  onClick={() => getLocation()}
+                  onClick={() => setLocationIsOpen(true)}
                   style={{ color: "rgba(245,83,61,1)" }}
                   class="fas fa-location-arrow"
                 ></i>
@@ -416,23 +446,18 @@ function EditPost({
           ></i>
         </div>
         <div className="modal-body">
-          {nearbyLocation && (
-            <div className="form-group">
-              <label htmlFor="inputState">Nearby Locations</label>
-              <select
-                onChange={(e) => setLocation(e.target.value)}
-                id="inputState"
-                className="form-control"
-                name="gender"
-                value={location}
-              >
-                <option selected>Choose Your Current Locations...</option>
-                {nearbyLocation.map((location) => (
-                  <option>{location.name}</option>
-                ))}
-              </select>
-            </div>
-          )}
+        <Combobox onSelect={handleSelect} aria-labelledby="demo">
+            <ComboboxInput value={value} onChange={handleInput} disabled={!ready} />
+            <ComboboxPopover>
+              <ComboboxList>
+                {status === "OK" &&
+                  data.map(({ id, description }) => (
+                    <ComboboxOption key={id} value={description} />
+                  ))}
+              </ComboboxList>
+            </ComboboxPopover>
+          </Combobox>
+          <div id="addressmap"></div>
         </div>
       </Modal>
      
