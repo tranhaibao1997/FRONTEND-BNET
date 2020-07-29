@@ -160,7 +160,7 @@ function Location(props) {
     <>
       <div className="ui-block">
         <div className="ui-block-title">
-          <h6 className="title">Friend Locations</h6>
+          <h6 className="title">Friend Locations( This will show your friend location depend on last location they checked in. if you check in, your location will be updated ^^. You can check in by create a new post and choose location to check in :D )</h6>
         </div>
       </div>
       <div className="ui-block-content">

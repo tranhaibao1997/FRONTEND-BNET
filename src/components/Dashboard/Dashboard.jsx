@@ -121,7 +121,7 @@ function Dashboard({ profile, createEmptyProfile, getCurrentProfile, loginFacebo
                         </li>
                        
                         <li>
-                          <Link to="/dashboard/changePassword">Change Password</Link>
+                          <Link to="/dashboard/changePassword">Change Password (will be updated later)</Link>
                         </li>
                         <li>
                           <Link to="/dashboard/hobbies">Hobbies and Interests</Link>
@@ -135,11 +135,11 @@ function Dashboard({ profile, createEmptyProfile, getCurrentProfile, loginFacebo
                   </div>
                 </div>
                 <div className="ui-block-title">
-                  <a href="#" className="h6 title">Notifications</a>
-                  <a href="#" className="items-round-little bg-primary">8</a>
+                  <a href="#" className="h6 title">Notifications (Will be updated later)</a>
+                  {/* <a href="#" className="items-round-little bg-primary">8</a> */}
                 </div>
                 <div className="ui-block-title">
-                  <a href="#" className="h6 title">Chat / Messages</a>
+                  <a href="#" className="h6 title">Chat / Messages (Will be updated later)</a>
                 </div>
                 <div className="ui-block-title">
                   <Link to="/dashboard/friendRequest" className="h6 title">Friend Requests Sent</Link>

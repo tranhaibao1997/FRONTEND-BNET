@@ -23,7 +23,13 @@ function Login({ isAuthenticated, login, loginFacebook }) {
   }
   return (
     <>
-      <div className="title h6">Login to your BNet Account</div>
+      <div className="title h6">Login to your BNet Account
+      <p>Test account </p>
+      <p>email: taylorswift@gmail.com </p>
+      <p>password:123456 </p>
+      </div>
+   
+
       <form className="content" type="submit" onSubmit={(e) => loginSubmit(e)}>
         <div className="row">
           <div className="col col-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
